@@ -1,0 +1,49 @@
+// src/hooks/useSocket.js
+import { useEffect, useRef } from "react";
+import { io } from "socket.io-client";
+
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "";
+
+let globalSocket = null;
+
+export function getSocket() {
+  if (!globalSocket) {
+    globalSocket = io(SOCKET_URL, {
+      transports: ["polling", "websocket"],
+      reconnectionAttempts: 5,
+    });
+  }
+  return globalSocket;
+}
+
+/**
+ * Join a group room and listen for real-time events.
+ * @param {string} groupId
+ * @param {object} handlers - { onExpenseAdded, onExpenseDeleted, onSettlementAdded, onGroupUpdated }
+ */
+export function useGroupSocket(groupId, handlers) {
+  const handlersRef = useRef(handlers);
+  handlersRef.current = handlers;
+
+  useEffect(() => {
+    if (!groupId) return;
+    const socket = getSocket();
+
+    socket.emit("join-group", groupId);
+
+    const on = (event, key) =>
+      socket.on(event, (...args) => handlersRef.current[key]?.(...args));
+
+    on("expense-added",     "onExpenseAdded");
+    on("expense-deleted",   "onExpenseDeleted");
+    on("settlement-added",  "onSettlementAdded");
+    on("settlement-deleted","onSettlementDeleted");
+    on("group-updated",     "onGroupUpdated");
+
+    return () => {
+      socket.emit("leave-group", groupId);
+      ["expense-added","expense-deleted","settlement-added","settlement-deleted","group-updated"]
+        .forEach(e => socket.off(e));
+    };
+  }, [groupId]);
+}

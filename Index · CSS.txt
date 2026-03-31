@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+}
+
+@layer components {
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-2xl border border-slate-100 shadow-sm;
+  }
+
+  /* Primary button */
+  .btn {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold
+           text-sm transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-slate-900 text-white hover:bg-slate-800 shadow-sm;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 shadow-sm;
+  }
+  .btn-danger {
+    @apply btn bg-red-50 text-red-600 hover:bg-red-100 border border-red-100;
+  }
+  .btn-green {
+    @apply btn bg-green-500 text-white hover:bg-green-600 shadow-sm;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full bg-white border border-slate-200 focus:border-slate-400 focus:ring-2
+           focus:ring-slate-400/20 rounded-xl px-4 py-2.5 text-slate-800 placeholder-slate-400
+           text-sm outline-none transition-all duration-150;
+  }
+
+  /* Select styles */
+  .select {
+    @apply input appearance-none cursor-pointer;
+  }
+
+  /* Balance chip */
+  .balance-positive {
+    @apply text-green-600 font-mono font-semibold;
+  }
+  .balance-negative {
+    @apply text-red-500 font-mono font-semibold;
+  }
+  .balance-zero {
+    @apply text-slate-400 font-mono font-medium;
+  }
+
+  /* Category badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  /* Page animation */
+  .page-enter {
+    animation: pageEnter 0.3s ease forwards;
+  }
+
+  @keyframes pageEnter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stagger > * {
+    animation: pageEnter 0.35s ease both;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger > *:nth-child(6) { animation-delay: 300ms; }
+}
